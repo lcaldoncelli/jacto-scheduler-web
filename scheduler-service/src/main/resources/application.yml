@@ -13,5 +13,16 @@ spring:
         initial-interval: 10000
         multiplier: 1.0
         max-interval: 10000
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
 server:
   port: 8881

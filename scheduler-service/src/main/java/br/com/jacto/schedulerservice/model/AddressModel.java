@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class AddressModel {
     private long postalCode;
     private String street;
-    private String number;
+    private long number;
     private String complement;
     private String district;
     private String city;
