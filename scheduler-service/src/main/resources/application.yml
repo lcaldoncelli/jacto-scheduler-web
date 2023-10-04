@@ -26,3 +26,7 @@ spring:
       ddl-auto: create-drop
 server:
   port: 8881
+
+app:
+  db:
+    init: true
