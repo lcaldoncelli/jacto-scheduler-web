@@ -26,4 +26,14 @@ public class UserModel {
                 .role(entity.getRole())
                 .build();
     }
+
+    public static UserEntity toEntity(UserModel model) {
+        return UserEntity.builder()
+                .id(model.getId())
+                .email(model.getEmail())
+                .name(model.getName())
+                .phoneNumber(model.getPhoneNumber())
+                .role(model.getRole())
+                .build();
+    }
 }

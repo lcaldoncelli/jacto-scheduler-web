@@ -1,5 +1,6 @@
 package br.com.jacto.schedulerservice.controller;
 
+import br.com.jacto.schedulerservice.model.BaseResponseModel;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
 import br.com.jacto.schedulerservice.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,44 @@ public class SchedulerController {
 
     @GetMapping(value = "/schedules", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public List<VisitScheduleModel> schedules() {
-        return schedulerService.getSchedules();
+    public BaseResponseModel schedules() {
+        try {
+            return BaseResponseModel.successResult(schedulerService.getSchedules());
+        } catch (Exception e) {
+            return BaseResponseModel.errorResult(e.getMessage(), -1);
+        }
+    }
+
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponseModel create(VisitScheduleModel model) {
+        try {
+            VisitScheduleModel resultModel = schedulerService.create(model);
+            return BaseResponseModel.successResult(resultModel);
+        } catch (Exception e) {
+            return BaseResponseModel.errorResult(e.getMessage(), -1);
+        }
+    }
+
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponseModel update(VisitScheduleModel model) {
+        try {
+            VisitScheduleModel resultModel = schedulerService.update(model);
+            return BaseResponseModel.successResult(resultModel);
+        } catch (Exception e) {
+            return BaseResponseModel.errorResult(e.getMessage(), -1);
+        }
+    }
+
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponseModel delete(VisitScheduleModel model) {
+        try {
+            schedulerService.delete(model);
+            return BaseResponseModel.successResult(model);
+        } catch (Exception e) {
+            return BaseResponseModel.errorResult(e.getMessage(), -1);
+        }
     }
 }

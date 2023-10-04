@@ -40,4 +40,18 @@ public class VisitScheduleModel {
                 .conclusionDescription(entity.getConclusionDescription())
                 .build();
     }
+
+    public static VisitScheduleEntity toEntity(VisitScheduleModel model) {
+        return VisitScheduleEntity.builder()
+                .id(model.getId())
+                .address(AddressModel.toEntity(model.getAddress()))
+                .creationDate(model.getCreationDate())
+                .modificationDate(model.getModificationDate())
+                .startDate(model.getStartDate())
+                .endDate(model.getEndDate())
+                .conclusionDate(model.getConclusionDate())
+                .serviceDescription(model.getServiceDescription())
+                .conclusionDescription(model.getConclusionDescription())
+                .build();
+    }
 }
