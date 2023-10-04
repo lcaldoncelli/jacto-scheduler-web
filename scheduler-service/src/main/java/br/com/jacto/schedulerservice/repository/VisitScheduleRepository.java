@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface VisitScheduleRepository extends JpaRepository<VisitScheduleEntity, Long> {
-    @Query(value = "SELECT * FROM VisitScheduleEntity WHERE id = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM VISIT_SCHEDULE WHERE USER_ID = :userId", nativeQuery = true)
     public List<VisitScheduleEntity> findByUser(long userId);
 
 }

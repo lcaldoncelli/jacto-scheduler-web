@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "TECH_VISIT_SCHEDULE")
+@Entity(name = "VISIT_SCHEDULE")
 @SequenceGenerator(name = "TECH_VISIT_SCHEDULE_SEQ", sequenceName = "TECH_VISIT_SCHEDULE_SEQ", initialValue = 1, allocationSize = 1)
 public class VisitScheduleEntity {
     @Id
@@ -21,7 +21,7 @@ public class VisitScheduleEntity {
     @Column(name = "ID")
     private long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "USER_ID")
     private UserEntity schedulerUser;
 
