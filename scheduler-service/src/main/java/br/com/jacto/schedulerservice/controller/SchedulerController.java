@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/scheduler")
+@RequestMapping("/scheduler")
 public class SchedulerController {
     @Autowired
     private SchedulerService schedulerService;

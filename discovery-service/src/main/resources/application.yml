@@ -1,3 +1,6 @@
+server:
+  port: 8761
+
 spring:
   application:
     name: discovery-service
@@ -13,8 +16,6 @@ spring:
         initial-interval: 10000
         multiplier: 1.0
         max-interval: 10000
-server:
-  port: 8761
 
 eureka:
   environment: DEV
