@@ -1,9 +1,12 @@
 package br.com.jacto.schedulerservice.service;
 
+import br.com.jacto.schedulerservice.entity.UserEntity;
 import br.com.jacto.schedulerservice.entity.VisitScheduleEntity;
 import br.com.jacto.schedulerservice.exceptions.InvalidDateSchedulerException;
+import br.com.jacto.schedulerservice.exceptions.InvalidUserSchedulerException;
 import br.com.jacto.schedulerservice.exceptions.SchedulerException;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
+import br.com.jacto.schedulerservice.repository.UserRepository;
 import br.com.jacto.schedulerservice.repository.VisitScheduleRepository;
 import br.com.jacto.schedulerservice.utils.SchedulerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +14,16 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class SchedulerService {
     @Autowired
     VisitScheduleRepository visitScheduleRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     /**
      * Return the list of schedules for a specific user
@@ -35,9 +42,16 @@ public class SchedulerService {
     public VisitScheduleModel create(VisitScheduleModel model) throws SchedulerException {
         VisitScheduleEntity entity = VisitScheduleModel.toEntity(model);
         isScheduleValid(entity, true);
+        Optional<UserEntity> user = userRepository.findById(1L);
+
+        if (user.isEmpty()) throw new InvalidUserSchedulerException();
+
         entity.setCreationDate(LocalDateTime.now());
         entity.setModificationDate(LocalDateTime.now());
+        entity.setSchedulerUser(user.get());
+
         return VisitScheduleModel.toModel(visitScheduleRepository.save(entity));
+
     }
 
     /**

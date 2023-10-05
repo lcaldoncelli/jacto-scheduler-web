@@ -27,6 +27,10 @@ spring:
 server:
   port: 8881
 
+springdoc:
+  api-docs:
+    path: /api-docs
+
 app:
   db:
     init: true

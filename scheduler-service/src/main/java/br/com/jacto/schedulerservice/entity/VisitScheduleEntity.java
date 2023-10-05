@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
+
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -25,7 +29,7 @@ public class VisitScheduleEntity {
     @JoinColumn(name = "USER_ID")
     private UserEntity schedulerUser;
 
-    @OneToOne
+    @OneToOne(cascade = {PERSIST,REMOVE})
     @JoinColumn(name = "ADDRESS_ID")
     private AddressEntity address;
 

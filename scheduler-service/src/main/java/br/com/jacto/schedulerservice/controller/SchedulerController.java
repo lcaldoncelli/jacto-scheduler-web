@@ -3,6 +3,7 @@ package br.com.jacto.schedulerservice.controller;
 import br.com.jacto.schedulerservice.model.BaseResponseModel;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
 import br.com.jacto.schedulerservice.service.SchedulerService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +18,7 @@ public class SchedulerController {
     private SchedulerService schedulerService;
 
     @GetMapping(value = "/schedules", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public BaseResponseModel schedules() {
         try {
             return BaseResponseModel.successResult(schedulerService.getSchedules());
@@ -26,9 +27,10 @@ public class SchedulerController {
         }
     }
 
-    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponseModel create(VisitScheduleModel model) {
+    @Operation(summary = "Create a new Schedule")
+    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseModel create(@RequestBody VisitScheduleModel model) {
         try {
             VisitScheduleModel resultModel = schedulerService.create(model);
             return BaseResponseModel.successResult(resultModel);
@@ -37,9 +39,9 @@ public class SchedulerController {
         }
     }
 
-    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponseModel update(VisitScheduleModel model) {
+    @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseModel update(@RequestBody VisitScheduleModel model) {
         try {
             VisitScheduleModel resultModel = schedulerService.update(model);
             return BaseResponseModel.successResult(resultModel);
@@ -49,8 +51,8 @@ public class SchedulerController {
     }
 
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponseModel delete(VisitScheduleModel model) {
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseModel delete(@RequestBody VisitScheduleModel model) {
         try {
             schedulerService.delete(model);
             return BaseResponseModel.successResult(model);

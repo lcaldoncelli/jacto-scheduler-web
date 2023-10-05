@@ -56,7 +56,6 @@ public class SchedulerServiceApplication {
 					.district("Pinheirinho")
 					.complement("Casa 12")
 					.build();
-			addressRepository.save(address);
 
 			VisitScheduleEntity visitSchedule = VisitScheduleEntity.builder()
 					.schedulerUser(user)
@@ -78,7 +77,6 @@ public class SchedulerServiceApplication {
 					.district("Centro")
 					.complement("Fundos")
 					.build();
-			addressRepository.save(address2);
 			VisitScheduleEntity visitSchedule2 = VisitScheduleEntity.builder()
 					.schedulerUser(user)
 					.address(address2)

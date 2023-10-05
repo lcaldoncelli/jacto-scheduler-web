@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressModel {
-    private long id;
     private long postalCode;
     private String street;
     private long number;
@@ -22,7 +21,6 @@ public class AddressModel {
 
     public static AddressModel toModel(AddressEntity entity) {
         return AddressModel.builder()
-                .id(entity.getId())
                 .postalCode(entity.getPostalCode())
                 .street(entity.getStreet())
                 .number(entity.getNumber())
@@ -35,7 +33,6 @@ public class AddressModel {
 
     public static AddressEntity toEntity(AddressModel model) {
         return AddressEntity.builder()
-                .id(model.getId())
                 .postalCode(model.getPostalCode())
                 .street(model.getStreet())
                 .number(model.getNumber())
