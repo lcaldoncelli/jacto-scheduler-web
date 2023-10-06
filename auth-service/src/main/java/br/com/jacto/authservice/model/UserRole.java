@@ -1,4 +1,4 @@
-package br.com.jacto.schedulerservice.model;
+package br.com.jacto.authservice.model;
 
 public enum UserRole {
     CLIENT,

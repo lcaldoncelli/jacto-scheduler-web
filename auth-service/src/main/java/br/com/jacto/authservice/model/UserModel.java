@@ -1,13 +1,13 @@
-package br.com.jacto.schedulerservice.model;
+package br.com.jacto.authservice.model;
 
-import br.com.jacto.schedulerservice.entity.UserEntity;
+import br.com.jacto.authservice.entity.UserEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserModel {

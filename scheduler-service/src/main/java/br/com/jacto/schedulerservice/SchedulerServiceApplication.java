@@ -2,11 +2,8 @@ package br.com.jacto.schedulerservice;
 
 import br.com.jacto.schedulerservice.configuration.SchedulerServiceConfiguration;
 import br.com.jacto.schedulerservice.entity.AddressEntity;
-import br.com.jacto.schedulerservice.entity.UserEntity;
 import br.com.jacto.schedulerservice.entity.VisitScheduleEntity;
-import br.com.jacto.schedulerservice.model.UserRole;
 import br.com.jacto.schedulerservice.repository.AddressRepository;
-import br.com.jacto.schedulerservice.repository.UserRepository;
 import br.com.jacto.schedulerservice.repository.VisitScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +21,6 @@ public class SchedulerServiceApplication {
 	SchedulerServiceConfiguration schedulerServiceConfiguration;
 
 	@Autowired
-	UserRepository userRepository;
-
-	@Autowired
 	AddressRepository addressRepository;
 	@Autowired
 	VisitScheduleRepository visitScheduleRepository;
@@ -39,14 +33,6 @@ public class SchedulerServiceApplication {
 	public void onApplicationReady() {
 		if (schedulerServiceConfiguration.isDbInit()) {
 			log.info("Add default initial data");
-			UserEntity user = UserEntity.builder()
-					.email("lcaldoncelli@gmail.com")
-					.role(UserRole.TECHNICIAN)
-					.phoneNumber("+5541999757451")
-					.name("Lucas Caldoncelli Rodrigues")
-					.build();
-			userRepository.save(user);
-
 			AddressEntity address = AddressEntity.builder()
 					.city("Curitiba")
 					.state("PR")
@@ -58,7 +44,7 @@ public class SchedulerServiceApplication {
 					.build();
 
 			VisitScheduleEntity visitSchedule = VisitScheduleEntity.builder()
-					.schedulerUser(user)
+					.userId(1L)
 					.address(address)
 					.creationDate(LocalDateTime.now())
 					.serviceDescription("Máquina danificada")
@@ -78,7 +64,7 @@ public class SchedulerServiceApplication {
 					.complement("Fundos")
 					.build();
 			VisitScheduleEntity visitSchedule2 = VisitScheduleEntity.builder()
-					.schedulerUser(user)
+					.userId(1L)
 					.address(address2)
 					.creationDate(LocalDateTime.now().plusSeconds(2))
 					.serviceDescription("Equipamento Serie 124919 não comunica com a central")

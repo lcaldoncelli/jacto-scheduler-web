@@ -25,13 +25,12 @@ public class VisitScheduleEntity {
     @Column(name = "ID")
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private UserEntity schedulerUser;
-
     @OneToOne(cascade = {PERSIST,REMOVE})
     @JoinColumn(name = "ADDRESS_ID")
     private AddressEntity address;
+
+    @Column(name = "USER_ID")
+    private long userId;
 
     @Column(name = "CREATION_DATE")
     private LocalDateTime creationDate;

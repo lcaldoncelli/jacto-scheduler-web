@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class VisitScheduleModel {
     private long id;
+    private long userId;
     private AddressModel address;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
@@ -30,6 +31,7 @@ public class VisitScheduleModel {
     public static VisitScheduleModel toModel(VisitScheduleEntity entity) {
         return VisitScheduleModel.builder()
                 .id(entity.getId())
+                .userId(entity.getUserId())
                 .address(AddressModel.toModel(entity.getAddress()))
                 .creationDate(entity.getCreationDate())
                 .modificationDate(entity.getModificationDate())
@@ -44,6 +46,7 @@ public class VisitScheduleModel {
     public static VisitScheduleEntity toEntity(VisitScheduleModel model) {
         return VisitScheduleEntity.builder()
                 .id(model.getId())
+                .userId(model.getUserId())
                 .address(AddressModel.toEntity(model.getAddress()))
                 .creationDate(model.getCreationDate())
                 .modificationDate(model.getModificationDate())
