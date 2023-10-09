@@ -63,16 +63,4 @@ public class AuthService {
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
-
-    public boolean checkPassword(String password, String encodedPassword) {
-        return passwordEncoder.matches(password, encodedPassword);
-    }
-
-    private String generateJwtLoginToken(String email, String password) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return jwtUtils.generateJwtToken(authentication);
-    }
-
 }

@@ -5,6 +5,7 @@ import br.com.jacto.authservice.model.CreateUserModel;
 import br.com.jacto.authservice.model.LoginModel;
 import br.com.jacto.authservice.model.TokenResponseModel;
 import br.com.jacto.authservice.service.AuthService;
+import br.com.jacto.authservice.utils.LanguageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,16 +44,11 @@ public class AuthController {
         }
     }
 
-    @Operation(summary = "Refresh token duration")
+    @Operation(summary = "Refresh token")
     @PostMapping(value = "/refresh-token", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseModel refreshToken() {
-        try {
-            TokenResponseModel resultModel = authService.refreshToken();
-            return BaseResponseModel.successResult(resultModel);
-        } catch (Exception e) {
-            return BaseResponseModel.errorResult(e.getMessage(), -1);
-        }
+        return BaseResponseModel.errorResult(LanguageUtils.NOT_YET_IMPLEMENTED, -1);
     }
 
     @GetMapping(value = "/test")
