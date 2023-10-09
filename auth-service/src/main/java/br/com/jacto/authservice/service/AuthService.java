@@ -7,19 +7,30 @@ import br.com.jacto.authservice.model.CreateUserModel;
 import br.com.jacto.authservice.model.LoginModel;
 import br.com.jacto.authservice.model.TokenResponseModel;
 import br.com.jacto.authservice.repository.UserRepository;
+import br.com.jacto.authservice.security.jwt.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class AuthService {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
     UserRepository userRepository;
+    @Autowired
+    JwtUtils jwtUtils;
 
     public TokenResponseModel create(CreateUserModel model) throws AuthException {
         UserEntity entity = CreateUserModel.toEntity(model);
@@ -29,11 +40,17 @@ public class AuthService {
     }
 
     public TokenResponseModel login(LoginModel model) throws AuthException {
-        Optional<UserEntity> entity = userRepository.findByEmail(model.getEmail());
-        if (entity.isPresent()) {
-            if (checkPassword(model.getPassword(), entity.get().getPassword())) {
-                return TokenResponseModel.toModel(entity.get(), "TOKEN");
+        try {
+            Optional<UserEntity> entity = userRepository.findByEmail(model.getEmail());
+            if (entity.isPresent()) {
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(model.getEmail(), model.getPassword()));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                String jwt = jwtUtils.generateJwtToken(authentication);
+                return TokenResponseModel.toModel(entity.get(), jwt);
             }
+        } catch (Exception e) {
+            log.info("Authentication failed", e);
         }
         throw new LoginFailedException();
     }
@@ -49,6 +66,13 @@ public class AuthService {
 
     public boolean checkPassword(String password, String encodedPassword) {
         return passwordEncoder.matches(password, encodedPassword);
+    }
+
+    private String generateJwtLoginToken(String email, String password) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return jwtUtils.generateJwtToken(authentication);
     }
 
 }
