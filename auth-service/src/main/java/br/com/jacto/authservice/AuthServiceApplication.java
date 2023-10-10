@@ -33,11 +33,11 @@ public class AuthServiceApplication {
 	public void onApplicationReady() throws AuthException {
 		if (authServiceConfiguration.isDbInit()) {
 			CreateUserModel user = CreateUserModel.builder()
-					.email("lcaldoncelli@gmail.com")
+					.email("string")
 					.role(UserRole.TECHNICIAN)
 					.phoneNumber("+5541999757451")
 					.name("Lucas Caldoncelli Rodrigues")
-					.password("password")
+					.password("string")
 					.build();
 			authService.create(user);
 		}

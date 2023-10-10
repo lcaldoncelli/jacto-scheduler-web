@@ -1,18 +1,21 @@
 package br.com.jacto.schedulerservice.controller;
 
-import br.com.jacto.schedulerservice.model.BaseResponseModel;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
 import br.com.jacto.schedulerservice.security.jwt.JwtUtils;
 import br.com.jacto.schedulerservice.service.SchedulerService;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/scheduler")
@@ -22,47 +25,78 @@ public class SchedulerController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Operation(summary = "Get list of schedules", description = "Gets the list of schedules for an authenticated User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Scheduler Error"),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure"),
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = VisitScheduleModel.class)))
+            } ) })
     @GetMapping(value = "/schedules", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseModel schedules(HttpServletRequest request) {
+    public ResponseEntity<?> schedules(HttpServletRequest request) {
         try {
-            return BaseResponseModel.successResult(schedulerService.getSchedules(getUserId(request)));
+            return ResponseEntity.ok(schedulerService.getSchedules(getUserId(request)));
         } catch (Exception e) {
-            return BaseResponseModel.errorResult(e.getMessage(), -1);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
-    @Operation(summary = "Create a new Schedule")
+    @Operation(summary = "Create new schedule", description = "Creates a new Schedule for an authenticated User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Scheduler Error"),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure"),
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = VisitScheduleModel.class))
+                    } ) })
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseModel create(@RequestBody VisitScheduleModel model, HttpServletRequest request) {
+    public ResponseEntity<?> create(@RequestBody VisitScheduleModel model, HttpServletRequest request) {
         try {
             VisitScheduleModel resultModel = schedulerService.create(model, getUserId(request));
-            return BaseResponseModel.successResult(resultModel);
+            return ResponseEntity.ok(resultModel);
         } catch (Exception e) {
-            return BaseResponseModel.errorResult(e.getMessage(), -1);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
+    @Operation(summary = "Updates existing schedule", description = "Updates a Schedule for an authenticated User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Scheduler Error"),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure"),
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = VisitScheduleModel.class))
+                    } ) })
     @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseModel update(@RequestBody VisitScheduleModel model, HttpServletRequest request) {
+    public ResponseEntity<?> update(@RequestBody VisitScheduleModel model, HttpServletRequest request) {
         try {
             VisitScheduleModel resultModel = schedulerService.update(model, getUserId(request));
-            return BaseResponseModel.successResult(resultModel);
+            return ResponseEntity.ok(resultModel);
         } catch (Exception e) {
-            return BaseResponseModel.errorResult(e.getMessage(), -1);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
+    @Operation(summary = "Removes existing schedule", description = "Removes a Schedule for an authenticated User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Scheduler Error"),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure"),
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = VisitScheduleModel.class))
+                    } ) })
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseModel delete(@RequestBody VisitScheduleModel model, HttpServletRequest request) {
+    public ResponseEntity<?> delete(@RequestBody VisitScheduleModel model, HttpServletRequest request) {
         try {
             schedulerService.delete(model, getUserId(request));
-            return BaseResponseModel.successResult(model);
+            return ResponseEntity.ok(model);
         } catch (Exception e) {
-            return BaseResponseModel.errorResult(e.getMessage(), -1);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 

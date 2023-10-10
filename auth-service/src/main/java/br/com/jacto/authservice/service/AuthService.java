@@ -6,6 +6,7 @@ import br.com.jacto.authservice.exceptions.LoginFailedException;
 import br.com.jacto.authservice.model.CreateUserModel;
 import br.com.jacto.authservice.model.LoginModel;
 import br.com.jacto.authservice.model.TokenResponseModel;
+import br.com.jacto.authservice.model.UserModel;
 import br.com.jacto.authservice.repository.UserRepository;
 import br.com.jacto.authservice.security.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -55,9 +57,12 @@ public class AuthService {
         throw new LoginFailedException();
     }
 
-    public TokenResponseModel refreshToken() throws AuthException {
-        //TODO
-        return null;
+    public UserModel getUser(long userId) throws AuthException {
+        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            return UserModel.toModel(optionalUser.get());
+        }
+        throw new LoginFailedException();
     }
 
     public String encodePassword(String password) {

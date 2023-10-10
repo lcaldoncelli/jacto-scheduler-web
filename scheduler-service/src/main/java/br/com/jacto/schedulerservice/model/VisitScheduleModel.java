@@ -2,6 +2,7 @@ package br.com.jacto.schedulerservice.model;
 
 import br.com.jacto.schedulerservice.entity.AddressEntity;
 import br.com.jacto.schedulerservice.entity.VisitScheduleEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

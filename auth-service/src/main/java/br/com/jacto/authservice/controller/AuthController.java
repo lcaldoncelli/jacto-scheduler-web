@@ -1,15 +1,17 @@
 package br.com.jacto.authservice.controller;
 
-import br.com.jacto.authservice.model.BaseResponseModel;
-import br.com.jacto.authservice.model.CreateUserModel;
-import br.com.jacto.authservice.model.LoginModel;
-import br.com.jacto.authservice.model.TokenResponseModel;
+import br.com.jacto.authservice.model.*;
 import br.com.jacto.authservice.service.AuthService;
 import br.com.jacto.authservice.utils.LanguageUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,40 +22,41 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @Operation(summary = "Create new User")
+    @Operation(summary = "Create User", description = "Create user and returns token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Auth Service Error"),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure"),
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TokenResponseModel.class))
+                    } ) })
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseModel create(@RequestBody CreateUserModel model) {
+    public ResponseEntity<?> create(@RequestBody CreateUserModel model) {
         try {
             TokenResponseModel resultModel = authService.create(model);
-            return BaseResponseModel.successResult(resultModel);
+            return ResponseEntity.ok(resultModel);
         } catch (Exception e) {
-            return BaseResponseModel.errorResult(e.getMessage(), -1);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
-    @Operation(summary = "Login")
+    @Operation(summary = "Login", description = "Authenticates user and returns token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Auth Service Error"),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure"),
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TokenResponseModel.class))
+                    } ) })
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseModel login(@RequestBody LoginModel model) {
+    public ResponseEntity<?> login(@RequestBody LoginModel model) {
         try {
             TokenResponseModel resultModel = authService.login(model);
-            return BaseResponseModel.successResult(resultModel);
+            return ResponseEntity.ok(resultModel);
         } catch (Exception e) {
-            return BaseResponseModel.errorResult(e.getMessage(), -1);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
-    }
-
-    @Operation(summary = "Refresh token")
-    @PostMapping(value = "/refresh-token", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public BaseResponseModel refreshToken() {
-        return BaseResponseModel.errorResult(LanguageUtils.NOT_YET_IMPLEMENTED, -1);
-    }
-
-    @GetMapping(value = "/test")
-    @ResponseStatus(HttpStatus.OK)
-    public String test() {
-        return "Hello Test";
     }
 }
