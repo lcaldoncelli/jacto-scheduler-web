@@ -39,6 +39,14 @@ security:
     prefix: Bearer
     expirationMinutes: 30
     secret: JwtS3cre3tk3y123JwtS3cre3tk3y456JwtS3cre3tk3y789JwtS3cre3tk3y012
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info,health
 
 app:
   db.init: true
