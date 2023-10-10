@@ -4,12 +4,14 @@ import br.com.jacto.authservice.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Date;
@@ -28,6 +30,7 @@ public class JwtUtils {
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
     return Jwts.builder()
         .setSubject((userPrincipal.getUsername()))
+        .setId(String.valueOf(userPrincipal.getId()))
         .setIssuedAt(new Date())
         .setExpiration(DateUtils.addMinutes(new Date(), jwtExpirationMin))
         .signWith(key(), SignatureAlgorithm.HS256)
@@ -41,6 +44,11 @@ public class JwtUtils {
   public String getUserNameFromJwtToken(String token) {
     return Jwts.parserBuilder().setSigningKey(key()).build()
                .parseClaimsJws(token).getBody().getSubject();
+  }
+
+  public Claims getJwtClaimsFromRequestJwtToken(HttpServletRequest request) {
+    return Jwts.parserBuilder().setSigningKey(key()).build()
+            .parseClaimsJws(parseJwt(request)).getBody();
   }
 
   public boolean validateJwtToken(String authToken) {
@@ -58,5 +66,15 @@ public class JwtUtils {
     }
 
     return false;
+  }
+
+  public String parseJwt(HttpServletRequest request) {
+    String headerAuth = request.getHeader("Authorization");
+
+    if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+      return headerAuth.substring(7);
+    }
+
+    return null;
   }
 }
