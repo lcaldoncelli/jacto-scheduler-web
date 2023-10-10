@@ -22,24 +22,26 @@ public class SchedulerService {
 
     /**
      * Return the list of schedules for a specific user
+     * @param userId - Authenticated User Id
      * @return List<VisitScheduleModel>
      */
-    public List<VisitScheduleModel> getSchedules() {
-        return visitScheduleRepository.findByUser(1L).stream()
+    public List<VisitScheduleModel> getSchedules(long userId) {
+        return visitScheduleRepository.findByUser(userId).stream()
                 .map(VisitScheduleModel::toModel)
                 .collect(Collectors.toList());
     }
 
     /**
      * Create a schedule for a specific user
+     * @param userId - Authenticated User Id
      * @return VisitScheduleModel - The created Schedule
      */
-    public VisitScheduleModel create(VisitScheduleModel model) throws SchedulerException {
+    public VisitScheduleModel create(VisitScheduleModel model, long userId) throws SchedulerException {
         VisitScheduleEntity entity = VisitScheduleModel.toEntity(model);
         isScheduleValid(entity, true);
         entity.setCreationDate(LocalDateTime.now());
         entity.setModificationDate(LocalDateTime.now());
-        entity.setUserId(1L);
+        entity.setUserId(userId);
 
         return VisitScheduleModel.toModel(visitScheduleRepository.save(entity));
 
@@ -48,21 +50,25 @@ public class SchedulerService {
     /**
      * Create a schedule for a specific user
      * @param model - The VisitScheduleModel to be updated
+     * @param userId - Authenticated User Id
      * @return VisitScheduleModel - The updated Schedule
      */
-    public VisitScheduleModel update(VisitScheduleModel model) throws SchedulerException {
+    public VisitScheduleModel update(VisitScheduleModel model, long userId) throws SchedulerException {
         VisitScheduleEntity entity = VisitScheduleModel.toEntity(model);
         isScheduleValid(entity, false);
+        isUserIdValid(model.getUserId(), userId);
         entity.setModificationDate(LocalDateTime.now());
         return VisitScheduleModel.toModel(visitScheduleRepository.save(entity));
     }
 
     /**
      * Delete a schedule for a specific user
+     * @param userId - Authenticated User Id
      * @param model - The VisitScheduleModel to be deleted
      */
-    public void delete(VisitScheduleModel model) {
+    public void delete(VisitScheduleModel model, long userId) throws SchedulerException {
         VisitScheduleEntity entity = VisitScheduleModel.toEntity(model);
+        isUserIdValid(model.getUserId(), userId);
         visitScheduleRepository.delete(entity);
     }
 
@@ -78,6 +84,20 @@ public class SchedulerService {
         if(SchedulerUtils.isInvalidDateTime(entity.getStartDate())
                 || (isCreate && SchedulerUtils.isPastDateTime(entity.getStartDate()))) {
             throw new InvalidDateSchedulerException();
+        }
+    }
+
+    /**
+     * Checks if entity has valid user ID in comparison with the authenticated User
+     *
+     * @param userId - User ID
+     * @param authenticatedUserId - Authenticated User ID
+     * @throws SchedulerException - Throws Exception if data is invalid.
+     */
+    private void isUserIdValid(long userId, long authenticatedUserId)
+            throws SchedulerException {
+        if(authenticatedUserId != userId) {
+            throw new InvalidUserSchedulerException();
         }
     }
 }
