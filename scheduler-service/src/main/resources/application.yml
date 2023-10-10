@@ -51,3 +51,5 @@ management:
         include: info,health
 app:
   db.init: true
+  postalCode:
+    wsUrl: https://viacep.com.br/ws/{postalCode}/json/

@@ -9,4 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class SchedulerServiceConfiguration {
     @Value("${app.db.init:#{false}}")
     private boolean dbInit;
+
+    @Value("${app.postalCode.wsUrl}")
+    private String postalCodeWsUrl;
 }

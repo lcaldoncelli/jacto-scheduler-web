@@ -66,6 +66,7 @@ public class WebSecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/v3/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/address/**")).permitAll()
                 .anyRequest().authenticated()
         );
     

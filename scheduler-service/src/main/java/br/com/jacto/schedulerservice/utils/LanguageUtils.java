@@ -5,4 +5,6 @@ public class LanguageUtils {
 
     public static String INVALID_USER = "Invalid User";
 
+    public static String THIRD_PARTY_INTEGRATION_ERROR = "Third Party API communication error";
+
 }
