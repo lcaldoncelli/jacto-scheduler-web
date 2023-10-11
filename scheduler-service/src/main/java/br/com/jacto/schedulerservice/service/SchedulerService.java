@@ -37,7 +37,7 @@ public class SchedulerService {
      */
     public VisitScheduleModel create(VisitScheduleModel model, long userId) throws SchedulerException {
         VisitScheduleEntity entity = VisitScheduleModel.toEntity(model);
-        isScheduleValid(entity, true);
+        isScheduleValid(entity);
         entity.setCreationDate(LocalDateTime.now());
         entity.setModificationDate(LocalDateTime.now());
         entity.setUserId(userId);
@@ -54,7 +54,7 @@ public class SchedulerService {
      */
     public VisitScheduleModel update(VisitScheduleModel model, long userId) throws SchedulerException {
         VisitScheduleEntity entity = VisitScheduleModel.toEntity(model);
-        isScheduleValid(entity, false);
+        isScheduleValid(entity);
         isUserIdValid(model.getUserId(), userId);
         entity.setModificationDate(LocalDateTime.now());
         return VisitScheduleModel.toModel(visitScheduleRepository.save(entity));
@@ -75,13 +75,12 @@ public class SchedulerService {
      * Checks if entity has valid data according to Business Rules
      *
      * @param entity   - VisitScheduleEntity object to be checked
-     * @param isCreate - Boolean indicating if data is going to be created ou updated
      * @throws SchedulerException - Throws Exception if data is invalid.
      */
-    private void isScheduleValid(VisitScheduleEntity entity, boolean isCreate)
+    private void isScheduleValid(VisitScheduleEntity entity)
             throws SchedulerException {
         if(SchedulerUtils.isInvalidDateTime(entity.getStartDate())
-                || (isCreate && SchedulerUtils.isPastDateTime(entity.getStartDate()))) {
+                || SchedulerUtils.isPastDateTime(entity.getStartDate())) {
             throw new InvalidDateSchedulerException();
         }
     }
