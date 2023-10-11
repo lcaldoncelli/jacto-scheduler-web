@@ -7,4 +7,6 @@ public class LanguageUtils {
 
     public static String THIRD_PARTY_INTEGRATION_ERROR = "Third Party API communication error";
 
+    public static String SCHEDULE_NOT_FOUND = "Schedule Not Found";
+
 }

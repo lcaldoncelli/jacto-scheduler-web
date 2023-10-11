@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import static jakarta.persistence.CascadeType.PERSIST;
-import static jakarta.persistence.CascadeType.REMOVE;
+import static jakarta.persistence.CascadeType.*;
 
 
 @Data
@@ -25,7 +24,7 @@ public class VisitScheduleEntity {
     @Column(name = "ID")
     private long id;
 
-    @OneToOne(cascade = {PERSIST,REMOVE})
+    @OneToOne(cascade = {MERGE, PERSIST,REMOVE})
     @JoinColumn(name = "ADDRESS_ID")
     private AddressEntity address;
 

@@ -1,5 +1,6 @@
 package br.com.jacto.schedulerservice.controller;
 
+import br.com.jacto.schedulerservice.model.DeleteScheduleModel;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
 import br.com.jacto.schedulerservice.security.jwt.JwtUtils;
 import br.com.jacto.schedulerservice.service.SchedulerService;
@@ -87,13 +88,13 @@ public class SchedulerController {
             @ApiResponse(responseCode = "401", description = "Authentication Failure"),
             @ApiResponse(responseCode = "200", description = "Success",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = VisitScheduleModel.class))
+                            schema = @Schema(implementation = DeleteScheduleModel.class))
                     } ) })
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> delete(@RequestBody VisitScheduleModel model, HttpServletRequest request) {
+    public ResponseEntity<?> delete(@RequestBody DeleteScheduleModel model, HttpServletRequest request) {
         try {
-            schedulerService.delete(model, getUserId(request));
+            schedulerService.delete(model.getScheduleId(), getUserId(request));
             return ResponseEntity.ok(model);
         } catch (Exception e) {
             return ResponseEntity.status(400).body(e.getMessage());

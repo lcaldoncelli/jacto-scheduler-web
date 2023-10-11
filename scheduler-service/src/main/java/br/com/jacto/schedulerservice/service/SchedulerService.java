@@ -3,6 +3,7 @@ package br.com.jacto.schedulerservice.service;
 import br.com.jacto.schedulerservice.entity.VisitScheduleEntity;
 import br.com.jacto.schedulerservice.exceptions.InvalidDateSchedulerException;
 import br.com.jacto.schedulerservice.exceptions.InvalidUserSchedulerException;
+import br.com.jacto.schedulerservice.exceptions.ScheduleNotFoundException;
 import br.com.jacto.schedulerservice.exceptions.SchedulerException;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
 import br.com.jacto.schedulerservice.repository.VisitScheduleRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,13 +64,14 @@ public class SchedulerService {
 
     /**
      * Delete a schedule for a specific user
+     * @param scheduleId - The VisitScheduleId to be deleted
      * @param userId - Authenticated User Id
-     * @param model - The VisitScheduleModel to be deleted
      */
-    public void delete(VisitScheduleModel model, long userId) throws SchedulerException {
-        VisitScheduleEntity entity = VisitScheduleModel.toEntity(model);
-        isUserIdValid(model.getUserId(), userId);
-        visitScheduleRepository.delete(entity);
+    public void delete(long scheduleId, long userId) throws SchedulerException {
+        Optional<VisitScheduleEntity> entity = visitScheduleRepository.findById(scheduleId);
+        if (entity.isEmpty()) throw new ScheduleNotFoundException();
+        isUserIdValid(entity.get().getUserId(), userId);
+        visitScheduleRepository.delete(entity.get());
     }
 
     /**

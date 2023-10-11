@@ -4,7 +4,9 @@ import br.com.jacto.schedulerservice.entity.AddressEntity;
 import br.com.jacto.schedulerservice.entity.VisitScheduleEntity;
 import br.com.jacto.schedulerservice.exceptions.InvalidDateSchedulerException;
 import br.com.jacto.schedulerservice.exceptions.InvalidUserSchedulerException;
+import br.com.jacto.schedulerservice.exceptions.ScheduleNotFoundException;
 import br.com.jacto.schedulerservice.exceptions.SchedulerException;
+import br.com.jacto.schedulerservice.model.DeleteScheduleModel;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
 import br.com.jacto.schedulerservice.repository.VisitScheduleRepository;
 
@@ -22,6 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,6 +82,8 @@ public class SchedulerServiceTests {
 
     @BeforeEach
     public void setUp() {
+        when(visitScheduleRepository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(visitSchedule01));
         when(visitScheduleRepository.findByUser(Mockito.anyLong()))
                 .thenReturn(Stream.of(visitSchedule01, visitSchedule02)
                         .collect(Collectors.toCollection(ArrayList::new)));
@@ -139,15 +144,25 @@ public class SchedulerServiceTests {
 
     @Test
     public void deleteScheduleTest() throws SchedulerException {
-        schedulerService.delete(VisitScheduleModel.toModel(visitSchedule01), 1);
+        schedulerService.delete(visitSchedule01.getId(), 1);
     }
 
     @Test
     public void deleteScheduleInvalidUserTest() {
         Exception exception = assertThrows(InvalidUserSchedulerException.class, () -> {
-            schedulerService.delete(VisitScheduleModel.toModel(visitSchedule01), 2);
+            schedulerService.delete(visitSchedule01.getId(), 2);
         });
         assertTrue(exception.getMessage().contains(LanguageUtils.INVALID_USER));
+    }
+
+    @Test
+    public void deleteScheduleInvalidScheduleTest() {
+        when(visitScheduleRepository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.empty());
+        Exception exception = assertThrows(ScheduleNotFoundException.class, () -> {
+            schedulerService.delete(visitSchedule01.getId(), 1);
+        });
+        assertTrue(exception.getMessage().contains(LanguageUtils.SCHEDULE_NOT_FOUND));
     }
 
 }
