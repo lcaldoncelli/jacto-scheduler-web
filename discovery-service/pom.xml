@@ -17,6 +17,7 @@
 		<java.version>19</java.version>
 		<spring-cloud.version>2022.0.4</spring-cloud.version>
 		<snakeyaml.version>2.2</snakeyaml.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<dependency>

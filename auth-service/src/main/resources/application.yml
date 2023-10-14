@@ -27,6 +27,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
 
 eureka:
   client:

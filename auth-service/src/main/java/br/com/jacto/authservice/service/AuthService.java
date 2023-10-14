@@ -26,7 +26,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class AuthService {
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     AuthenticationManager authenticationManager;

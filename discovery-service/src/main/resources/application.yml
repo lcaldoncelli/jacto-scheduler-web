@@ -16,6 +16,11 @@ spring:
         initial-interval: 10000
         multiplier: 1.0
         max-interval: 10000
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+
 
 eureka:
   environment: DEV
