@@ -1,5 +1,6 @@
 package br.com.jacto.authservice.controller;
 
+import br.com.jacto.authservice.model.JsonDefaultResponseModel;
 import br.com.jacto.authservice.model.UserModel;
 import br.com.jacto.authservice.security.jwt.JwtUtils;
 import br.com.jacto.authservice.service.AuthService;
@@ -43,7 +44,7 @@ public class UserController {
             long userId = Long.parseLong(claims.getId());
             return ResponseEntity.ok(authService.getUser(userId));
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(400).body(new JsonDefaultResponseModel(e.getMessage()));
         }
     }
 }

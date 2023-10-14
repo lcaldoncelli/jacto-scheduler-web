@@ -1,6 +1,7 @@
 package br.com.jacto.schedulerservice.controller;
 
 import br.com.jacto.schedulerservice.model.AddressModel;
+import br.com.jacto.schedulerservice.model.JsonDefaultResponseModel;
 import br.com.jacto.schedulerservice.security.jwt.JwtUtils;
 import br.com.jacto.schedulerservice.service.AddressService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +37,7 @@ public class AddressController {
         try {
             return ResponseEntity.ok(addressService.getAddressModel(model));
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(400).body(new JsonDefaultResponseModel(e.getMessage()));
         }
     }
 }

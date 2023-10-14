@@ -1,6 +1,7 @@
 package br.com.jacto.schedulerservice.controller;
 
 import br.com.jacto.schedulerservice.model.DeleteScheduleModel;
+import br.com.jacto.schedulerservice.model.JsonDefaultResponseModel;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
 import br.com.jacto.schedulerservice.security.jwt.JwtUtils;
 import br.com.jacto.schedulerservice.service.SchedulerService;
@@ -40,7 +41,7 @@ public class SchedulerController {
         try {
             return ResponseEntity.ok(schedulerService.getSchedules(getUserId(request)));
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(400).body(new JsonDefaultResponseModel(e.getMessage()));
         }
     }
 
@@ -59,7 +60,7 @@ public class SchedulerController {
             VisitScheduleModel resultModel = schedulerService.create(model, getUserId(request));
             return ResponseEntity.ok(resultModel);
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(400).body(new JsonDefaultResponseModel(e.getMessage()));
         }
     }
 
@@ -78,7 +79,7 @@ public class SchedulerController {
             VisitScheduleModel resultModel = schedulerService.update(model, getUserId(request));
             return ResponseEntity.ok(resultModel);
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(400).body(new JsonDefaultResponseModel(e.getMessage()));
         }
     }
 
@@ -97,7 +98,7 @@ public class SchedulerController {
             schedulerService.delete(model.getScheduleId(), getUserId(request));
             return ResponseEntity.ok(model);
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(400).body(new JsonDefaultResponseModel(e.getMessage()));
         }
     }
 

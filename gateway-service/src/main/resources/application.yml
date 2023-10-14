@@ -17,6 +17,16 @@ spring:
         multiplier: 1.0
         max-interval: 10000
     gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
       routes:
         - id: openapi
           uri: http://localhost:${server.port}

@@ -37,7 +37,7 @@ public class AuthController {
             TokenResponseModel resultModel = authService.create(model);
             return ResponseEntity.ok(resultModel);
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(400).body(new JsonDefaultResponseModel(e.getMessage()));
         }
     }
 
@@ -56,7 +56,7 @@ public class AuthController {
             TokenResponseModel resultModel = authService.login(model);
             return ResponseEntity.ok(resultModel);
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(400).body(new JsonDefaultResponseModel(e.getMessage()));
         }
     }
 }
