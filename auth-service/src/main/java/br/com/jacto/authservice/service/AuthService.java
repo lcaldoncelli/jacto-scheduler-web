@@ -3,6 +3,7 @@ package br.com.jacto.authservice.service;
 import br.com.jacto.authservice.entity.UserEntity;
 import br.com.jacto.authservice.exceptions.AuthException;
 import br.com.jacto.authservice.exceptions.LoginFailedException;
+import br.com.jacto.authservice.exceptions.UserAlreadyRegisteredException;
 import br.com.jacto.authservice.model.CreateUserModel;
 import br.com.jacto.authservice.model.LoginModel;
 import br.com.jacto.authservice.model.TokenResponseModel;
@@ -35,10 +36,14 @@ public class AuthService {
     JwtUtils jwtUtils;
 
     public TokenResponseModel create(CreateUserModel model) throws AuthException {
-        UserEntity entity = CreateUserModel.toEntity(model);
-        entity.setPassword(encodePassword(model.getPassword()));
-        userRepository.save(entity);
-        return login(CreateUserModel.toLoginModel(model));
+        Optional<UserEntity> existingEntity = userRepository.findByEmail(model.getEmail());
+        if (existingEntity.isEmpty()) {
+            UserEntity entity = CreateUserModel.toEntity(model);
+            entity.setPassword(encodePassword(model.getPassword()));
+            userRepository.save(entity);
+            return login(CreateUserModel.toLoginModel(model));
+        }
+        throw new UserAlreadyRegisteredException();
     }
 
     public TokenResponseModel login(LoginModel model) throws AuthException {
