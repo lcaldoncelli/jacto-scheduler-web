@@ -6,7 +6,6 @@ import br.com.jacto.schedulerservice.exceptions.InvalidDateSchedulerException;
 import br.com.jacto.schedulerservice.exceptions.InvalidUserSchedulerException;
 import br.com.jacto.schedulerservice.exceptions.ScheduleNotFoundException;
 import br.com.jacto.schedulerservice.exceptions.SchedulerException;
-import br.com.jacto.schedulerservice.model.DeleteScheduleModel;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
 import br.com.jacto.schedulerservice.repository.VisitScheduleRepository;
 
@@ -19,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;

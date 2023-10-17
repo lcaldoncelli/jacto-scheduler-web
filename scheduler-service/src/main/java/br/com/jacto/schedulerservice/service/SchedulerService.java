@@ -33,6 +33,19 @@ public class SchedulerService {
     }
 
     /**
+     * Read a schedule for a specific user
+     * @param scheduleId - The VisitScheduleId to be fetched
+     * @param userId - Authenticated User Id
+     * @return VisitScheduleModel
+     */
+    public VisitScheduleModel read(long scheduleId, long userId) throws SchedulerException {
+        Optional<VisitScheduleEntity> entity = visitScheduleRepository.findById(scheduleId);
+        if (entity.isEmpty()) throw new ScheduleNotFoundException();
+        isUserIdValid(entity.get().getUserId(), userId);
+        return VisitScheduleModel.toModel(entity.get());
+    }
+
+    /**
      * Create a schedule for a specific user
      * @param userId - Authenticated User Id
      * @return VisitScheduleModel - The created Schedule

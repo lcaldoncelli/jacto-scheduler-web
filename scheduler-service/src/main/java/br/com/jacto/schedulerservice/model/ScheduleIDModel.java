@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeleteScheduleModel {
+public class ScheduleIDModel {
     private long scheduleId;
 }

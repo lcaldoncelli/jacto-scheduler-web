@@ -1,6 +1,6 @@
 package br.com.jacto.schedulerservice.controller;
 
-import br.com.jacto.schedulerservice.model.DeleteScheduleModel;
+import br.com.jacto.schedulerservice.model.ScheduleIDModel;
 import br.com.jacto.schedulerservice.model.JsonDefaultResponseModel;
 import br.com.jacto.schedulerservice.model.VisitScheduleModel;
 import br.com.jacto.schedulerservice.security.jwt.JwtUtils;
@@ -45,6 +45,24 @@ public class SchedulerController {
         }
     }
 
+    @Operation(summary = "Get existing schedule", description = "Gets existing Schedule based on its ID for an authenticated User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Scheduler Error"),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure"),
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = VisitScheduleModel.class))
+                    } ) })
+    @PostMapping(value = "/read", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> read(@RequestBody ScheduleIDModel model, HttpServletRequest request) {
+        try {
+            VisitScheduleModel resultModel = schedulerService.read(model.getScheduleId(), getUserId(request));
+            return ResponseEntity.ok(resultModel);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new JsonDefaultResponseModel(e.getMessage()));
+        }
+    }
     @Operation(summary = "Create new schedule", description = "Creates a new Schedule for an authenticated User")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Scheduler Error"),
@@ -89,11 +107,11 @@ public class SchedulerController {
             @ApiResponse(responseCode = "401", description = "Authentication Failure"),
             @ApiResponse(responseCode = "200", description = "Success",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DeleteScheduleModel.class))
+                            schema = @Schema(implementation = ScheduleIDModel.class))
                     } ) })
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> delete(@RequestBody DeleteScheduleModel model, HttpServletRequest request) {
+    public ResponseEntity<?> delete(@RequestBody ScheduleIDModel model, HttpServletRequest request) {
         try {
             schedulerService.delete(model.getScheduleId(), getUserId(request));
             return ResponseEntity.ok(model);
